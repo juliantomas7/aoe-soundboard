@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const soundboard = document.querySelector('.soundboard');
     const buttons = document.querySelectorAll('.sound-button');
     const editButton = document.querySelector('.edit-button');
+    const loadingScreen = document.querySelector('.loading-screen');
     const mouths = {
         base: document.querySelector('.character-base'),
         closed: document.querySelector('.mouth-closed'),
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentMouthInterval = null;
     let blinkTimeout = null;
     let userEyesTimeout = null;
+    let loadedSounds = 0;
+    const totalSounds = buttons.length;
 
     function setActiveMouth(type) {
         Object.values(mouths).forEach(mouth => mouth.classList.remove('active'));
@@ -170,7 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Precarga y manejo de audio
     buttons.forEach(button => {
         const soundName = button.dataset.sound;
-        const audio = new Audio(`sounds/${soundName}.mp3`);
+        const audio = new Audio();
+        
+        audio.addEventListener('canplaythrough', () => {
+            loadedSounds++;
+            if (loadedSounds === totalSounds) {
+                loadingScreen.classList.add('hidden');
+            }
+        }, { once: true });
+
+        audio.src = `sounds/${soundName}.mp3`;
         audioElements.set(button, audio);
 
         button.addEventListener('click', (e) => {
@@ -187,7 +199,14 @@ document.addEventListener('DOMContentLoaded', () => {
             buttons.forEach(btn => btn.classList.remove('playing'));
             
             const currentAudio = audioElements.get(button);
-            currentAudio.play();
+            const playPromise = currentAudio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Error reproduciendo audio:", error);
+                });
+            }
+            
             button.classList.add('playing');
             animateMouth(currentAudio);
 
