@@ -95,7 +95,7 @@ body {
     gap: 6px;
 }
 
-/* Botones EXTRA GRANDES */
+/* Botones tamaño intermedio */
 .sound-button {
     font-family: 'MedievalSharp', cursive;
     font-size: 1.6em;
@@ -171,11 +171,11 @@ body {
     100% { opacity: 0.6; }
 }
 
-/* Media queries con botones más grandes */
+/* Media queries con botones más balanceados */
 @media screen and (max-width: 768px) {
     .container {
-        width: 90%;
-        left: 5%;
+        width: 88%;
+        left: 6%;
         top: 35%;
     }
     
