@@ -79,38 +79,38 @@ body {
     opacity: 1;
 }
 
-/* Contenedor de botones - TAMAÑO AUMENTADO */
+/* Contenedor de botones */
 .container {
     position: fixed;
-    width: 58%;
+    width: 52%;
     left: 8.5%;
-    top: 20%;
+    top: 22%;
     z-index: 3;
-    padding: 6px;
+    padding: 8px;
 }
 
 .soundboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
+    gap: 8px;
 }
 
-/* Botones tamaño intermedio */
+/* Botones más compactos */
 .sound-button {
     font-family: 'MedievalSharp', cursive;
-    font-size: 1.6em;
-    padding: 16px 24px;
+    font-size: 1.3em;
+    padding: 12px 18px;
     border: 2px solid var(--primary-gold);
     background: var(--button-blue);
     color: white;
     cursor: pointer;
-    border-radius: 14px;
+    border-radius: 12px;
     text-transform: uppercase;
     text-align: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: transform 0.2s ease;
     line-height: 1.1;
-    min-height: 60px;
+    min-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -171,29 +171,29 @@ body {
     100% { opacity: 0.6; }
 }
 
-/* Media queries con botones más balanceados */
+/* Media queries */
 @media screen and (max-width: 768px) {
     .container {
-        width: 88%;
-        left: 6%;
+        width: 85%;
+        left: 7.5%;
         top: 35%;
     }
     
     .sound-button {
-        font-size: 1.5em;
-        padding: 14px 20px;
-        min-height: 55px;
+        font-size: 1.2em;
+        padding: 10px 16px;
+        min-height: 44px;
     }
 }
 
 @media screen and (min-width: 769px) and (max-height: 800px) {
     .container {
-        top: 18%;
+        top: 20%;
     }
     
     .sound-button {
-        font-size: 1.5em;
-        padding: 15px 22px;
-        min-height: 58px;
+        font-size: 1.2em;
+        padding: 11px 16px;
+        min-height: 46px;
     }
 } 
