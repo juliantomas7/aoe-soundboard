@@ -12,6 +12,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 
 body {
@@ -22,6 +24,10 @@ body {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .container {
@@ -267,4 +273,55 @@ h1, h2 {
 
 .mouth.active {
     opacity: 1;
+}
+
+/* Optimizaciones móviles */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 85%;
+        margin-left: 7.5%;
+        margin-top: 35%;
+    }
+    
+    .soundboard {
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .sound-button {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+
+    .edit-button {
+        top: 10px;
+        right: 10px;
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+}
+
+/* Prevenir comportamientos indeseados en táctil */
+@media (hover: none) {
+    .sound-button:hover {
+        transform: none;
+        box-shadow: 
+            0 2px 4px rgba(0,0,0,0.2),
+            inset 0 1px 3px rgba(255,255,255,0.2);
+        background: var(--button-blue);
+    }
+
+    .sound-button:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Optimización para notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
 } 
