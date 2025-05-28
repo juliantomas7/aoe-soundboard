@@ -18,7 +18,7 @@
 
 body {
     font-family: 'MedievalSharp', cursive;
-    background: url('Artboard 1.png') no-repeat center center fixed;
+    background: url('images/background/Artboard 1.png') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     display: flex;
