@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.sound-button');
     const editButton = document.querySelector('.edit-button');
     const loadingScreen = document.querySelector('.loading-screen');
+    const container = document.querySelector('.container');
     const mouths = {
         base: document.querySelector('.character-base'),
         closed: document.querySelector('.mouth-closed'),
@@ -22,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let userEyesTimeout = null;
     let loadedSounds = 0;
     const totalSounds = buttons.length;
+
+    // Prevenir scroll del body
+    document.body.classList.add('no-scroll');
+
+    // Prevenir scroll en iOS
+    document.addEventListener('touchmove', (e) => {
+        if (!container.contains(e.target)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     function setActiveMouth(type) {
         Object.values(mouths).forEach(mouth => mouth.classList.remove('active'));
