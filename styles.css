@@ -1,19 +1,216 @@
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
-:root {
-    --primary-blue: #1B4B82;
-    --primary-gold: #FFD700;
-    --button-blue: #1a3c6e;
-    --cream: #F5F5DC;
-    --button-shadow: #8B7355;
-}
-
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
+}
+
+/* Estructura principal */
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+}
+
+.app-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Capa de fondo y personaje */
+.background-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-layers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.character-base,
+.mouth-container,
+.eyes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mouth,
+.eyes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    object-fit: cover;
+}
+
+.mouth.active,
+.eyes.active {
+    opacity: 1;
+}
+
+/* Capa de contenido */
+.content-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.container {
+    width: 42%;
+    margin-left: 8.5%;
+    margin-top: 24%;
+    padding: 20px;
+    height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: auto;
+}
+
+/* Soundboard */
+.soundboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+    padding: 15px;
+    background: transparent;
+}
+
+/* Botones */
+.sound-button {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.1em;
+    padding: 10px 16px;
+    border: 2px solid var(--primary-gold);
+    background: var(--button-blue);
+    color: white;
+    cursor: grab;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 3px rgba(255,255,255,0.2);
+    user-select: none;
+    pointer-events: auto;
+}
+
+.edit-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    border-radius: 20px;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    pointer-events: auto;
+}
+
+/* Loading screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--button-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-text {
+    color: var(--primary-gold);
+    font-size: 1.5em;
+    text-align: center;
+    animation: pulse 1.5s infinite;
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Media queries */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        height: 55vh;
+        margin-top: 28%;
+    }
+    
+    .soundboard {
+        gap: 12px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .container {
+        height: 58vh;
+        margin-top: 24%;
+    }
+}
+
+/* Variables */
+:root {
+    --primary-blue: #1B4B82;
+    --primary-gold: #FFD700;
+    --button-blue: #1a3c6e;
+    --cream: #F5F5DC;
+    --button-shadow: #8B7355;
 }
 
 body {
@@ -101,38 +298,8 @@ body {
     pointer-events: auto;
 }
 
-.soundboard {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 13px;
-    padding: 15px;
-    background: transparent;
-}
-
 h1, h2 {
     display: none;
-}
-
-.sound-button {
-    font-family: 'MedievalSharp', cursive;
-    font-size: 1.1em;
-    padding: 10px 16px;
-    border: 2px solid var(--primary-gold);
-    background: var(--button-blue);
-    color: white;
-    cursor: grab;
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 0.5px;
-    box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
-        inset 0 1px 3px rgba(255,255,255,0.2);
-    user-select: none;
-    will-change: transform;
 }
 
 .sound-button::before {
@@ -211,33 +378,6 @@ h1, h2 {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Botón de edición */
-.edit-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid var(--primary-gold);
-    color: var(--primary-gold);
-    border-radius: 20px;
-    font-family: 'MedievalSharp', cursive;
-    cursor: pointer;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1001;
-}
-
-.edit-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.edit-button.active {
-    background: var(--primary-gold);
-    color: var(--button-blue);
-}
-
 @keyframes shake {
     0% { transform: rotate(0deg); }
     25% { transform: rotate(-0.5deg); }
@@ -299,58 +439,6 @@ h1, h2 {
         padding-bottom: env(safe-area-inset-bottom);
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
-    }
-}
-
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--button-blue);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease-out;
-}
-
-.loading-screen.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.loading-text {
-    color: var(--primary-gold);
-    font-size: 1.5em;
-    text-align: center;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-/* Ajustes para iPad */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .container {
-        height: 55vh;
-        margin-top: 28%;
-    }
-    
-    .soundboard {
-        gap: 12px;
-    }
-}
-
-/* Ajustes para iPad Pro */
-@media screen and (min-width: 1024px) {
-    .container {
-        height: 58vh;
-        margin-top: 24%;
     }
 }
 
