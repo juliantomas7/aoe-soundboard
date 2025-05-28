@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+:root {
+    --primary-blue: #1B4B82;
+    --primary-gold: #FFD700;
+    --button-blue: #1a3c6e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    font-family: 'MedievalSharp', cursive;
+}
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.character-base {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mouth-container,
+.eyes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mouth,
+.eyes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    object-fit: cover;
+}
+
+.mouth.active,
+.eyes.active {
+    opacity: 1;
+}
+
+/* Contenedor de botones */
+.container {
+    position: fixed;
+    width: 50%;
+    left: 6%;
+    top: 20%;
+    z-index: 3;
+    padding: 6px;
+}
+
+.soundboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+}
+
+/* Botones */
+.sound-button {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.25em;
+    padding: 10px 16px;
+    border: 2px solid var(--primary-gold);
+    background: var(--button-blue);
+    color: white;
+    cursor: pointer;
+    border-radius: 12px;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+    line-height: 1.1;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sound-button:active {
+    transform: scale(0.98);
+}
+
+.sound-button.playing {
+    background: var(--primary-gold);
+    color: var(--button-blue);
+}
+
+.edit-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    border-radius: 20px;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--button-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-text {
+    color: var(--primary-gold);
+    font-size: 1.5em;
+    text-align: center;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Media queries */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 85%;
+        left: 7.5%;
+        top: 32%;
+    }
+    
+    .sound-button {
+        font-size: 1.15em;
+        padding: 9px 14px;
+        min-height: 40px;
+    }
+} 
