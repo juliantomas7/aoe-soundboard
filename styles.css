@@ -1,34 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
-/* Reset básico */
+:root {
+    --primary-blue: #1B4B82;
+    --primary-gold: #FFD700;
+    --button-blue: #1a3c6e;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
 }
 
-/* Estructura principal */
-html, body {
-    height: 100%;
-    width: 100%;
+body {
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
     position: fixed;
+    font-family: 'MedievalSharp', cursive;
 }
 
-.app-container {
+/* Contenedor principal */
+.background-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-/* Capa de fondo y personaje */
-.background-layer {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -37,6 +31,23 @@ html, body {
 }
 
 .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Contenedor del personaje y sus elementos */
+.character-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.character-base {
     position: absolute;
     top: 0;
     left: 0;
@@ -45,15 +56,6 @@ html, body {
     object-fit: cover;
 }
 
-.character-layers {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.character-base,
 .mouth-container,
 .eyes-container {
     position: absolute;
@@ -80,61 +82,50 @@ html, body {
     opacity: 1;
 }
 
-/* Capa de contenido */
-.content-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    pointer-events: none;
-}
-
+/* Contenedor de botones */
 .container {
-    width: 42%;
-    margin-left: 8.5%;
-    margin-top: 24%;
-    padding: 10px;
-    height: auto;
-    max-height: 65vh;
-    pointer-events: auto;
+    position: fixed;
+    width: 52%;
+    left: 8.5%;
+    top: 22%;
+    z-index: 3;
+    padding: 8px;
 }
 
-/* Soundboard */
 .soundboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    padding: 10px;
-    background: transparent;
 }
 
-/* Botones */
+/* Estilos de botones */
 .sound-button {
     font-family: 'MedievalSharp', cursive;
-    font-size: 0.95em;
-    padding: 8px 12px;
+    font-size: 1.3em;
+    padding: 12px 18px;
     border: 2px solid var(--primary-gold);
     background: var(--button-blue);
     color: white;
-    cursor: grab;
+    cursor: pointer;
     border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
     text-align: center;
-    letter-spacing: 0.5px;
-    box-shadow: 
-        0 2px 4px rgba(0,0,0,0.2),
-        inset 0 1px 3px rgba(255,255,255,0.2);
-    user-select: none;
-    pointer-events: auto;
-    min-height: 36px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+    line-height: 1.1;
+    min-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.sound-button:active {
+    transform: scale(0.98);
+}
+
+.sound-button.playing {
+    background: var(--primary-gold);
+    color: var(--button-blue);
 }
 
 .edit-button {
@@ -148,13 +139,10 @@ html, body {
     border-radius: 20px;
     font-family: 'MedievalSharp', cursive;
     cursor: pointer;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1001;
-    pointer-events: auto;
 }
 
-/* Loading screen */
+/* Pantalla de carga */
 .loading-screen {
     position: fixed;
     top: 0;
@@ -181,7 +169,6 @@ html, body {
     animation: pulse 1.5s infinite;
 }
 
-/* Animaciones */
 @keyframes pulse {
     0% { opacity: 0.6; }
     50% { opacity: 1; }
@@ -189,47 +176,54 @@ html, body {
 }
 
 /* Media queries */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+@media screen and (max-width: 768px) {
     .container {
-        margin-top: 28%;
-        width: 44%;
+        width: 85%;
+        left: 7.5%;
+        top: 35%;
     }
     
-    .soundboard {
-        gap: 10px;
-    }
-
     .sound-button {
-        font-size: 0.9em;
-        padding: 6px 10px;
-        min-height: 34px;
+        font-size: 1.2em;
+        padding: 10px 16px;
+        min-height: 44px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-height: 800px) {
+    .container {
+        top: 20%;
+    }
+    
+    .sound-button {
+        font-size: 1.2em;
+        padding: 11px 16px;
+        min-height: 46px;
     }
 }
 
 @media screen and (min-width: 1024px) {
     .container {
         margin-top: 24%;
-        width: 42%;
     }
-
+    
     .sound-button {
         font-size: 1em;
         padding: 8px 14px;
-        min-height: 38px;
     }
 }
 
-/* Para pantallas más pequeñas */
-@media screen and (max-height: 800px) {
-    .container {
-        margin-top: 22%;
-    }
+/* Animaciones */
+.edit-mode .sound-button {
+    animation: shake 0.8s infinite;
+}
 
-    .sound-button {
-        font-size: 0.85em;
-        padding: 6px 10px;
-        min-height: 32px;
-    }
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-0.5deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(0.5deg); }
+    100% { transform: rotate(0deg); }
 }
 
 /* Variables */
