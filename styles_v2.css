@@ -83,7 +83,7 @@ body {
 .container {
     position: fixed;
     width: 50%;
-    left: 2%;
+    left: 3%;
     top: 20%;
     z-index: 3;
     padding: 6px;
