@@ -28,8 +28,6 @@ body {
     align-items: flex-start;
     justify-content: flex-start;
     overflow: hidden;
-    position: fixed;
-    width: 100%;
 }
 
 .container {
@@ -37,8 +35,8 @@ body {
     margin-left: 8.5%;
     margin-top: 24%;
     padding: 20px;
-    position: absolute;
-    z-index: 1;
+    position: relative;
+    z-index: 2;
     height: 60vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -219,11 +217,10 @@ h1, h2 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
+    z-index: 1;
 }
 
 .character-base {
@@ -233,19 +230,27 @@ h1, h2 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 1 !important;
 }
 
-.mouth-container, .eyes-container {
+.mouth-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    z-index: 2;
 }
 
-.mouth, .eyes {
+.eyes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+.mouth {
     position: absolute;
     top: 0;
     left: 0;
@@ -254,13 +259,23 @@ h1, h2 {
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
     object-fit: cover;
+    will-change: opacity;
 }
 
+.eyes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    object-fit: cover;
+    will-change: opacity;
+}
+
+.mouth.active,
 .eyes.active {
-    opacity: 1;
-}
-
-.mouth.active {
     opacity: 1;
 }
 
