@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+:root {
+    --primary-blue: #1B4B82;
+    --primary-gold: #FFD700;
+    --button-blue: #1a3c6e;
+    --cream: #F5F5DC;
+    --button-shadow: #8B7355;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'MedievalSharp', cursive;
+    background: url('Artboard 1.png') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.container {
+    width: 42%;
+    margin-left: 8.5%;
+    margin-top: 24%;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+h1, h2 {
+    display: none;
+}
+
+.soundboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+    padding: 15px;
+    background: transparent;
+}
+
+.sound-button {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.1em;
+    padding: 10px 16px;
+    border: 2px solid var(--primary-gold);
+    background: var(--button-blue);
+    color: white;
+    cursor: grab;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 3px rgba(255,255,255,0.2);
+    user-select: none;
+    will-change: transform;
+}
+
+.sound-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 215, 0, 0.2),
+        transparent
+    );
+    transition: all 0.5s;
+}
+
+.sound-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 
+        0 3px 6px rgba(0,0,0,0.3),
+        inset 0 1px 3px rgba(255,255,255,0.3);
+    background: #234b8a;
+}
+
+.sound-button:active {
+    cursor: grabbing;
+    transform: translateY(1px);
+    box-shadow: 
+        0 1px 2px rgba(0,0,0,0.2),
+        inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.sound-button:hover::before {
+    left: 100%;
+}
+
+/* Optimización para iPad Pro 12.9" */
+@media screen and (min-width: 1024px) {
+    .container {
+        width: 42%;
+        margin-left: 8.5%;
+        margin-top: 24%;
+    }
+    
+    .soundboard {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .sound-button {
+        font-size: 1.17em;
+        padding: 13px 20px;
+    }
+}
+
+/* Animación cuando se reproduce el sonido */
+.sound-button.playing {
+    animation: buttonPulse 0.3s ease;
+    background: var(--primary-gold);
+    color: var(--button-blue);
+}
+
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.sortable-ghost {
+    opacity: 0;
+    background: var(--primary-gold) !important;
+}
+
+.sortable-chosen {
+    animation: none !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                0 10px 10px rgba(0,0,0,0.22) !important;
+    opacity: 0.9;
+    z-index: 1000;
+}
+
+.sortable-drag {
+    opacity: 0.9;
+    transform: scale(1.1);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                0 10px 10px rgba(0,0,0,0.22);
+}
+
+/* Animación para los botones que se mueven */
+.soundboard .sound-button {
+    transform: translate3d(0, 0, 0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Botón de edición */
+.edit-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    border-radius: 20px;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+}
+
+.edit-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.edit-button.active {
+    background: var(--primary-gold);
+    color: var(--button-blue);
+}
+
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-0.5deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(0.5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.edit-mode .sound-button {
+    animation: shake 0.8s infinite;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilos del personaje */
+.character-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.character-base {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1 !important;
+}
+
+.eyes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.eyes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.eyes.active {
+    opacity: 1;
+}
+
+.mouth-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mouth {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.mouth.active {
+    opacity: 1;
+} 
