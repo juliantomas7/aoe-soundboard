@@ -85,35 +85,35 @@ body {
 /* Contenedor de botones */
 .container {
     position: fixed;
-    width: 52%;
+    width: 46%;
     left: 8.5%;
-    top: 22%;
+    top: 24%;
     z-index: 3;
-    padding: 8px;
+    padding: 6px;
 }
 
 .soundboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
 }
 
 /* Estilos de botones */
 .sound-button {
     font-family: 'MedievalSharp', cursive;
-    font-size: 1.3em;
-    padding: 12px 18px;
+    font-size: 1.1em;
+    padding: 8px 14px;
     border: 2px solid var(--primary-gold);
     background: var(--button-blue);
     color: white;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 10px;
     text-transform: uppercase;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: transform 0.2s ease;
     line-height: 1.1;
-    min-height: 48px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -178,27 +178,27 @@ body {
 /* Media queries */
 @media screen and (max-width: 768px) {
     .container {
-        width: 85%;
-        left: 7.5%;
+        width: 82%;
+        left: 9%;
         top: 35%;
     }
     
     .sound-button {
-        font-size: 1.2em;
-        padding: 10px 16px;
-        min-height: 44px;
+        font-size: 1em;
+        padding: 8px 12px;
+        min-height: 36px;
     }
 }
 
 @media screen and (min-width: 769px) and (max-height: 800px) {
     .container {
-        top: 20%;
+        top: 24%;
     }
     
     .sound-button {
-        font-size: 1.2em;
-        padding: 11px 16px;
-        min-height: 46px;
+        font-size: 1em;
+        padding: 8px 14px;
+        min-height: 38px;
     }
 }
 
