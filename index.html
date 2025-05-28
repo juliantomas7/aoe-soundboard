@@ -7,35 +7,38 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>AOE Soundboard Challenge</title>
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         .container {
             position: fixed !important;
-            width: 60% !important;
+            width: 46% !important;
             left: 8.5% !important;
-            top: 18% !important;
-            padding: 5px !important;
+            top: 24% !important;
+            z-index: 3 !important;
+            padding: 6px !important;
         }
         
         .soundboard {
-            gap: 5px !important;
+            gap: 6px !important;
         }
         
         .sound-button {
-            font-size: 1.8em !important;
-            padding: 16px 24px !important;
+            font-size: 1.1em !important;
+            padding: 8px 14px !important;
+            min-height: 40px !important;
         }
         
         @media screen and (max-width: 768px) {
             .container {
-                width: 90% !important;
-                left: 5% !important;
+                width: 82% !important;
+                left: 9% !important;
             }
             
             .sound-button {
-                font-size: 1.5em !important;
-                padding: 14px 20px !important;
+                font-size: 1em !important;
+                padding: 8px 12px !important;
+                min-height: 36px !important;
             }
         }
     </style>
