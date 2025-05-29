@@ -202,9 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.src = `sounds/${soundName}.mp3`;
         audioElements.set(button, audio);
 
-        // Conectar el audio al sistema de partículas la primera vez que se reproduce
-        let isFirstPlay = true;
-
         button.addEventListener('click', (e) => {
             if (isEditMode) {
                 e.preventDefault();
@@ -225,13 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
             buttons.forEach(btn => btn.classList.remove('playing'));
             
             const currentAudio = audioElements.get(button);
-
-            // Conectar el audio al sistema de partículas solo la primera vez
-            if (isFirstPlay) {
-                particleSystem.connectAudio(currentAudio);
-                isFirstPlay = false;
-            }
-            
             const playPromise = currentAudio.play();
             
             if (playPromise !== undefined) {
