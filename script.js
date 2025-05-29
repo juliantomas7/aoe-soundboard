@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closed: document.querySelector('.eyes-closed'),
         user: document.querySelector('.eyes-user')
     };
-    const audioElements = new Map();
+    
+    // Usar Map para almacenar las instancias de Howl
+    const sounds = new Map();
     let sortableInstance = null;
     let isEditMode = false;
     let currentMouthInterval = null;
@@ -38,20 +40,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
 
     function setActiveMouth(type) {
-        Object.values(mouths).forEach(mouth => mouth.classList.remove('active'));
-        mouths[type].classList.add('active');
+        gsap.to(Object.values(mouths), {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.inOut"
+        });
+        gsap.to(mouths[type], {
+            opacity: 1,
+            duration: 0.2,
+            ease: "power2.inOut"
+        });
     }
 
     function setActiveEyes(type) {
-        Object.values(eyes).forEach(eye => eye.classList.remove('active'));
         if (type) {
-            eyes[type].classList.add('active');
+            gsap.to(Object.values(eyes), {
+                opacity: 0,
+                duration: 0.2,
+                ease: "power2.inOut"
+            });
+            gsap.to(eyes[type], {
+                opacity: 1,
+                duration: 0.2,
+                ease: "power2.inOut"
+            });
+        } else {
+            gsap.to(eyes.user, {
+                opacity: 1,
+                duration: 0.2,
+                ease: "power2.inOut"
+            });
         }
     }
 
     function getRandomMouth() {
         const mouthStates = ['closed', 'half', 'midOpen', 'open'];
-        const weights = [25, 30, 30, 15]; // Ajustado las probabilidades
+        const weights = [25, 30, 30, 15];
         const random = Math.random() * 100;
         let sum = 0;
         
@@ -65,23 +89,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function blink() {
-        // Duración del parpadeo
-        setActiveEyes('closed');
-        setTimeout(() => {
-            setActiveEyes(null);
-        }, 150);
+        gsap.timeline()
+            .to(eyes.user, { opacity: 0, duration: 0.1 })
+            .to(eyes.closed, { opacity: 1, duration: 0.1 })
+            .to(eyes.closed, { opacity: 0, duration: 0.1, delay: 0.15 })
+            .to(eyes.user, { opacity: 1, duration: 0.1 });
     }
 
     function scheduleNextBlink() {
-        // Parpadeo normal cada 2-6 segundos
         const nextBlinkDelay = Math.random() * (6000 - 2000) + 2000;
         blinkTimeout = setTimeout(() => {
-            // 20% de probabilidad de ojos de usuario en lugar de parpadeo normal
             if (Math.random() < 0.2) {
-                setActiveEyes('user');
-                // Mantener ojos de usuario por 0.5-1.5 segundos
+                gsap.timeline()
+                    .to(eyes.user, { opacity: 0, duration: 0.2 })
+                    .to(eyes.closed, { opacity: 1, duration: 0.2 })
+                    .to(eyes.closed, { opacity: 0, duration: 0.2, delay: Math.random() })
+                    .to(eyes.user, { opacity: 1, duration: 0.2 });
+                
                 userEyesTimeout = setTimeout(() => {
-                    setActiveEyes(null);
                     scheduleNextBlink();
                 }, Math.random() * (1500 - 500) + 500);
             } else {
@@ -91,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, nextBlinkDelay);
     }
 
-    function animateMouth(audio) {
+    function animateMouth(sound) {
         if (currentMouthInterval) {
             clearInterval(currentMouthInterval);
         }
@@ -114,16 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const getRandomInterval = () => Math.floor(Math.random() * (100 - 50) + 50);
         
-        updateMouth(); // Comenzar inmediatamente
+        updateMouth();
         
         function scheduleNextUpdate() {
             updateMouth();
             currentMouthInterval = setTimeout(scheduleNextUpdate, getRandomInterval());
         }
 
-        setTimeout(scheduleNextUpdate, 50); // Comenzar las actualizaciones rápidamente
+        setTimeout(scheduleNextUpdate, 50);
 
-        audio.addEventListener('ended', () => {
+        sound.once('end', () => {
             if (currentMouthInterval) {
                 clearTimeout(currentMouthInterval);
             }
@@ -168,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listener para el botón de edición
     editButton.addEventListener('click', toggleEditMode);
 
     // Restaurar el orden guardado
@@ -184,20 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Precarga y manejo de audio
+    // Precarga y manejo de audio con Howler.js
     buttons.forEach(button => {
         const soundName = button.dataset.sound;
-        const audio = new Audio();
-        
-        audio.addEventListener('canplaythrough', () => {
-            loadedSounds++;
-            if (loadedSounds === totalSounds) {
-                loadingScreen.classList.add('hidden');
+        const sound = new Howl({
+            src: [`sounds/${soundName}.mp3`],
+            preload: true,
+            onload: () => {
+                loadedSounds++;
+                if (loadedSounds === totalSounds) {
+                    loadingScreen.classList.add('hidden');
+                }
             }
-        }, { once: true });
-
-        audio.src = `sounds/${soundName}.mp3`;
-        audioElements.set(button, audio);
+        });
+        
+        sounds.set(button, sound);
 
         button.addEventListener('click', (e) => {
             if (isEditMode) {
@@ -205,39 +230,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            audioElements.forEach(audio => {
-                audio.pause();
-                audio.currentTime = 0;
+            sounds.forEach(sound => {
+                sound.stop();
             });
             
             buttons.forEach(btn => btn.classList.remove('playing'));
             
-            const currentAudio = audioElements.get(button);
-            const playPromise = currentAudio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log("Error reproduciendo audio:", error);
-                });
-            }
-            
+            const currentSound = sounds.get(button);
+            currentSound.play();
             button.classList.add('playing');
-            animateMouth(currentAudio);
+            animateMouth(currentSound);
 
-            currentAudio.onended = () => {
+            currentSound.once('end', () => {
                 button.classList.remove('playing');
-            };
+            });
         });
     });
 
-    // Efecto de hover con sonido de "clic"
+    // Efecto de hover mejorado con GSAP
     buttons.forEach(button => {
         button.addEventListener('mouseenter', () => {
-            button.style.transform = 'scale(1.05)';
+            gsap.to(button, {
+                scale: 1.05,
+                duration: 0.2,
+                ease: "power2.out"
+            });
         });
 
         button.addEventListener('mouseleave', () => {
-            button.style.transform = 'scale(1)';
+            gsap.to(button, {
+                scale: 1,
+                duration: 0.2,
+                ease: "power2.in"
+            });
         });
     });
 }); 
