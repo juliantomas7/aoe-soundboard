@@ -40,36 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
 
     function setActiveMouth(type) {
-        gsap.to(Object.values(mouths), {
-            opacity: 0,
-            duration: 0.2,
-            ease: "power2.inOut"
-        });
-        gsap.to(mouths[type], {
-            opacity: 1,
-            duration: 0.2,
-            ease: "power2.inOut"
-        });
+        Object.values(mouths).forEach(mouth => mouth.classList.remove('active'));
+        mouths[type].classList.add('active');
     }
 
     function setActiveEyes(type) {
+        Object.values(eyes).forEach(eye => eye.classList.remove('active'));
         if (type) {
-            gsap.to(Object.values(eyes), {
-                opacity: 0,
-                duration: 0.2,
-                ease: "power2.inOut"
-            });
-            gsap.to(eyes[type], {
-                opacity: 1,
-                duration: 0.2,
-                ease: "power2.inOut"
-            });
+            eyes[type].classList.add('active');
         } else {
-            gsap.to(eyes.user, {
-                opacity: 1,
-                duration: 0.2,
-                ease: "power2.inOut"
-            });
+            eyes.user.classList.add('active');
         }
     }
 
@@ -89,24 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function blink() {
-        gsap.timeline()
-            .to(eyes.user, { opacity: 0, duration: 0.1 })
-            .to(eyes.closed, { opacity: 1, duration: 0.1 })
-            .to(eyes.closed, { opacity: 0, duration: 0.1, delay: 0.15 })
-            .to(eyes.user, { opacity: 1, duration: 0.1 });
+        setActiveEyes('closed');
+        setTimeout(() => {
+            setActiveEyes('user');
+        }, 150);
     }
 
     function scheduleNextBlink() {
         const nextBlinkDelay = Math.random() * (6000 - 2000) + 2000;
         blinkTimeout = setTimeout(() => {
             if (Math.random() < 0.2) {
-                gsap.timeline()
-                    .to(eyes.user, { opacity: 0, duration: 0.2 })
-                    .to(eyes.closed, { opacity: 1, duration: 0.2 })
-                    .to(eyes.closed, { opacity: 0, duration: 0.2, delay: Math.random() })
-                    .to(eyes.user, { opacity: 1, duration: 0.2 });
-                
+                setActiveEyes('closed');
                 userEyesTimeout = setTimeout(() => {
+                    setActiveEyes('user');
                     scheduleNextBlink();
                 }, Math.random() * (1500 - 500) + 500);
             } else {
@@ -252,16 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('mouseenter', () => {
             gsap.to(button, {
                 scale: 1.05,
-                duration: 0.2,
-                ease: "power2.out"
+                duration: 0.15,
+                ease: "power1.out"
             });
         });
 
         button.addEventListener('mouseleave', () => {
             gsap.to(button, {
                 scale: 1,
-                duration: 0.2,
-                ease: "power2.in"
+                duration: 0.15,
+                ease: "power1.in"
             });
         });
     });
