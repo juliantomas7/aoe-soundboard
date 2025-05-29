@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let loadedSounds = 0;
     const totalSounds = buttons.length;
 
+    // Inicializar sistema de partículas
+    const particleSystem = new ParticleSystem();
+
     // Prevenir scroll del body
     document.body.classList.add('no-scroll');
 
@@ -204,6 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 return;
             }
+
+            // Crear partículas en la posición del clic
+            const rect = button.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            particleSystem.createParticles(x, y);
 
             audioElements.forEach(audio => {
                 audio.pause();
