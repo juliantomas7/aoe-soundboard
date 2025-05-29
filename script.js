@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Prevenir scroll del body
     document.body.classList.add('no-scroll');
 
+    // Iniciar el parpadeo inmediatamente
+    scheduleNextBlink();
+
     // Prevenir scroll en iOS
     document.addEventListener('touchmove', (e) => {
         if (!container.contains(e.target)) {
