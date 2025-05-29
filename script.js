@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closed: document.querySelector('.eyes-closed'),
         user: document.querySelector('.eyes-user')
     };
-    
-    // Usar Map para almacenar las instancias de Howl
-    const sounds = new Map();
+    const audioElements = new Map();
     let sortableInstance = null;
     let isEditMode = false;
     let currentMouthInterval = null;
@@ -48,14 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.values(eyes).forEach(eye => eye.classList.remove('active'));
         if (type) {
             eyes[type].classList.add('active');
-        } else {
-            eyes.user.classList.add('active');
         }
     }
 
     function getRandomMouth() {
         const mouthStates = ['closed', 'half', 'midOpen', 'open'];
-        const weights = [25, 30, 30, 15];
+        const weights = [25, 30, 30, 15]; // Ajustado las probabilidades
         const random = Math.random() * 100;
         let sum = 0;
         
@@ -69,19 +65,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function blink() {
+        // Duración del parpadeo
         setActiveEyes('closed');
         setTimeout(() => {
-            setActiveEyes('user');
+            setActiveEyes(null);
         }, 150);
     }
 
     function scheduleNextBlink() {
+        // Parpadeo normal cada 2-6 segundos
         const nextBlinkDelay = Math.random() * (6000 - 2000) + 2000;
         blinkTimeout = setTimeout(() => {
+            // 20% de probabilidad de ojos de usuario en lugar de parpadeo normal
             if (Math.random() < 0.2) {
-                setActiveEyes('closed');
+                setActiveEyes('user');
+                // Mantener ojos de usuario por 0.5-1.5 segundos
                 userEyesTimeout = setTimeout(() => {
-                    setActiveEyes('user');
+                    setActiveEyes(null);
                     scheduleNextBlink();
                 }, Math.random() * (1500 - 500) + 500);
             } else {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, nextBlinkDelay);
     }
 
-    function animateMouth(sound) {
+    function animateMouth(audio) {
         if (currentMouthInterval) {
             clearInterval(currentMouthInterval);
         }
@@ -114,16 +114,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const getRandomInterval = () => Math.floor(Math.random() * (100 - 50) + 50);
         
-        updateMouth();
+        updateMouth(); // Comenzar inmediatamente
         
         function scheduleNextUpdate() {
             updateMouth();
             currentMouthInterval = setTimeout(scheduleNextUpdate, getRandomInterval());
         }
 
-        setTimeout(scheduleNextUpdate, 50);
+        setTimeout(scheduleNextUpdate, 50); // Comenzar las actualizaciones rápidamente
 
-        sound.once('end', () => {
+        audio.addEventListener('ended', () => {
             if (currentMouthInterval) {
                 clearTimeout(currentMouthInterval);
             }
@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Event listener para el botón de edición
     editButton.addEventListener('click', toggleEditMode);
 
     // Restaurar el orden guardado
@@ -183,21 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Precarga y manejo de audio con Howler.js
+    // Precarga y manejo de audio
     buttons.forEach(button => {
         const soundName = button.dataset.sound;
-        const sound = new Howl({
-            src: [`sounds/${soundName}.mp3`],
-            preload: true,
-            onload: () => {
-                loadedSounds++;
-                if (loadedSounds === totalSounds) {
-                    loadingScreen.classList.add('hidden');
-                }
-            }
-        });
+        const audio = new Audio();
         
-        sounds.set(button, sound);
+        audio.addEventListener('canplaythrough', () => {
+            loadedSounds++;
+            if (loadedSounds === totalSounds) {
+                loadingScreen.classList.add('hidden');
+            }
+        }, { once: true });
+
+        audio.src = `sounds/${soundName}.mp3`;
+        audioElements.set(button, audio);
 
         button.addEventListener('click', (e) => {
             if (isEditMode) {
@@ -205,39 +205,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            sounds.forEach(sound => {
-                sound.stop();
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
             });
             
             buttons.forEach(btn => btn.classList.remove('playing'));
             
-            const currentSound = sounds.get(button);
-            currentSound.play();
+            const currentAudio = audioElements.get(button);
+            const playPromise = currentAudio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Error reproduciendo audio:", error);
+                });
+            }
+            
             button.classList.add('playing');
-            animateMouth(currentSound);
+            animateMouth(currentAudio);
 
-            currentSound.once('end', () => {
+            currentAudio.onended = () => {
                 button.classList.remove('playing');
-            });
+            };
         });
     });
 
-    // Efecto de hover mejorado con GSAP
+    // Efecto de hover con sonido de "clic"
     buttons.forEach(button => {
         button.addEventListener('mouseenter', () => {
-            gsap.to(button, {
-                scale: 1.05,
-                duration: 0.15,
-                ease: "power1.out"
-            });
+            button.style.transform = 'scale(1.05)';
         });
 
         button.addEventListener('mouseleave', () => {
-            gsap.to(button, {
-                scale: 1,
-                duration: 0.15,
-                ease: "power1.in"
-            });
+            button.style.transform = 'scale(1)';
         });
     });
 }); 
